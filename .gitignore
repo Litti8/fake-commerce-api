@@ -1,0 +1,25 @@
+
+# Ignorar el directorio del entorno virtual
+# Añade los nombres comunes que uses (venv, .venv, o el especifico que creaste)
+fake_commerce_env/
+venv/
+.venv/
+
+# Ignorar archivos Python generados
+*.pyc
+__pycache__/
+
+.env
+
+# Archivos de configuracion especificos de tu IDE (ejemplos comunes)
+.vscode/
+.idea/
+
+# staticfiles/
+
+
+# *.log
+
+# Archivos de cobertura de tests
+# .coverage
+# htmlcov/
