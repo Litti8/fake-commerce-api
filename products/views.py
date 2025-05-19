@@ -1,7 +1,3 @@
-from django.shortcuts import render
-
-# products/views.py
-
 from rest_framework import viewsets, generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
@@ -23,13 +19,15 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     A ViewSet for viewing read-only product data.
     Provides list and retrieve actions.
     """
-    queryset = Product.objects.all().select_related('category')
+    # Add a default ordering to the queryset for consistent pagination
+    queryset = Product.objects.all().select_related('category').order_by('id')
     serializer_class = ProductSerializer
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category']
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'title']
+
 
 
 class CategoryListView(generics.ListAPIView):
