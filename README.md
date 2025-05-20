@@ -14,6 +14,7 @@ Feel free to use this API in your frontend projects to display product lists, de
 * PostgreSQL (as the database)
 * Docker (for containerization)
 * Docker Compose (for multi-container management)
+* Gunicorn (WSGI HTTP Server for production)
 * AWS (for deployment - details coming soon)
 
 ## Getting Started
@@ -68,7 +69,7 @@ The recommended way to get this project running locally is using Docker Compose.
         ```
 
 7.  **Access the API:**
-    * The Django development server is running inside the `web` container and is accessible via `http://localhost:8000/` on your host machine (due to port mapping in `docker-compose.yml`).
+    * The Django application is served by **Gunicorn** inside the `web` container and is accessible via `http://localhost:8000/` on your host machine (due to port mapping in `docker-compose.yml`).
     * You can now access the API endpoints using your web browser or an API client like Postman:
 
 ---

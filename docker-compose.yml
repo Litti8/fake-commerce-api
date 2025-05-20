@@ -1,8 +1,8 @@
-version: '3.8'
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    # Command to run the application using Gunicorn
+    command: gunicorn fake_commerce_api.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120
     volumes:
       - .:/app
     ports:
@@ -25,7 +25,6 @@ services:
       - "5432:5432"
     container_name: fake_commerce_db
     healthcheck:
-      # Prueba a ejecutar pg_isready para ver si la BD esta lista
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s

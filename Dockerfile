@@ -24,5 +24,5 @@ COPY . /app/
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Run the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Command to run the application using Gunicorn
+CMD ["gunicorn", "fake_commerce_api.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120"]
