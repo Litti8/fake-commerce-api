@@ -15,6 +15,7 @@ Feel free to use this API in your frontend projects to display product lists, de
 * Docker (for containerization)
 * Docker Compose (for multi-container management)
 * Gunicorn (WSGI HTTP Server for production)
+* django-cors-headers (for Cross-Origin Resource Sharing)
 * AWS (for deployment - details coming soon)
 
 ## Getting Started
@@ -32,8 +33,9 @@ The recommended way to get this project running locally is using Docker Compose.
 
 3.  **Configure Environment Variables:**
     * Create a `.env` file in the project root directory (same level as `docker-compose.yml` and `manage.py`).
-    * Define the database credentials that Docker Compose and your Django application will use. Ensure these match the configuration in `docker-compose.yml`.
-    * Example `.env` file (replace with your desired values):
+    * Define the database credentials and Django settings that Docker Compose and your Django application will use.
+    * **Important:** For production, ensure `DEBUG=0` and `SECRET_KEY` is a strong, randomly generated string. `ALLOWED_HOSTS` should list your production domain(s) when `DEBUG=0`.
+    * Example `.env` file (replace `your_django_secret_key_here` with a strong, random key):
         ```dotenv
         # .env
         DB_NAME=fake_commerce_db
@@ -42,10 +44,11 @@ The recommended way to get this project running locally is using Docker Compose.
         # When using Docker Compose, the host is the name of the DB service
         DB_HOST=db
         DB_PORT=5432
-        # Django Secret Key (for development, can be simple)
-        SECRET_KEY=your_django_secret_key
-        # Set to 1 for debug mode (optional, but useful during development)
-        DEBUG=1
+
+        # Django Production/Development Settings
+        SECRET_KEY=your_django_secret_key_here # IMPORTANT: Generate a strong, random key for production!
+        DEBUG=1 # Set to 0 for False in production
+        # ALLOWED_HOSTS=localhost,127.0.0.1,your.domain.com # Uncomment and set in production (comma-separated)
         ```
     * **Important:** Add `/.env` to your `.gitignore` file to prevent committing sensitive data.
 
@@ -69,8 +72,8 @@ The recommended way to get this project running locally is using Docker Compose.
         ```
 
 7.  **Access the API:**
-    * The Django application is served by **Gunicorn** inside the `web` container and is accessible via `http://localhost:8000/` on your host machine (due to port mapping in `docker-compose.yml`).
-    * You can now access the API endpoints using your web browser or an API client like Postman:
+    * The Django application is served by **Gunicorn** inside the `web` container, and its static files are served by Django's development server (when `DEBUG=1`). It is accessible via `http://localhost:8000/` on your host machine (due to port mapping in `docker-compose.yml`).
+    * You can now access the API endpoints using your web browser (which will show the browsable API) or an API client like Postman:
 
 ---
 

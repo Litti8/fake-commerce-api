@@ -16,7 +16,7 @@ __pycache__/
 .idea/
 
 # staticfiles/
-
+staticfiles/
 
 # *.log
 
