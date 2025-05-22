@@ -9,17 +9,21 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+# SECURITY WARNING: keep the secret key used in production secret!
 # Get SECRET_KEY from environment variable
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-insecure-default-secret-key-for-development')
 
 
+# SECURITY WARNING: don't run with debug turned on in production!
 # Get DEBUG from environment variable (convert "1" or "True" to True, others to False)
 DEBUG = os.getenv('DEBUG', '0').lower() in ('true', '1', 't')
 
 
 # ALLOWED_HOSTS for production
 if not DEBUG:
-    # Get ALLOWED_HOSTS from an environment variable,
+    # In production, get ALLOWED_HOSTS from an environment variable,
+    # splitting by comma. Example: ALLOWED_HOSTS=api.example.com,localhost
     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 else:
     # In development, allow all hosts for convenience
@@ -37,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
-    'corsheaders', 
+    'corsheaders',
     'products',
 ]
 
@@ -125,6 +129,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -135,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://github.com/adamchainz/django-cors-headers
 
 # For a public API, you might allow all origins in development.
-# In production, you should specify exact origins.
+# In production, you should set CORS_ALLOW_ALL_ORIGINS to False and use CORS_ALLOWED_ORIGINS.
 CORS_ALLOW_ALL_ORIGINS = True # Set to False in production and use CORS_ALLOWED_ORIGINS
 
 # If CORS_ALLOW_ALL_ORIGINS is False, specify allowed origins here.
@@ -145,23 +150,23 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 
-# You might need to allow specific methods or headers if your frontend uses them
-# CORS_ALLOW_METHODS = [
-#     "DELETE",
-#     "GET",
-#     "OPTIONS",
-#     "PATCH",
-#     "POST",
-#     "PUT",
-# ]
-# CORS_ALLOW_HEADERS = [
-#     "accept",
-#     "accept-encoding",
-#     "authorization",
-#     "content-type",
-#     "dnt",
-#     "origin",
-#     "user-agent",
-#     "x-csrftoken",
-#     "x-requested-with",
-# ]
+
+# Django REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10, # Default page size if not specified in viewset
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [], # No authentication for public API
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny', # Allow anyone to access
+    ],
+    # --- Rate Limiting Configuration ---
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle', # Throttle for unauthenticated users
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/minute', # 100 requests per minute for anonymous users
+        # You can define other throttle rates, e.g., 'user': '1000/day' for authenticated users
+    },
+    # --- End Rate Limiting Configuration ---
+}

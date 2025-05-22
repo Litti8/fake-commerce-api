@@ -16,6 +16,7 @@ Feel free to use this API in your frontend projects to display product lists, de
 * Docker Compose (for multi-container management)
 * Gunicorn (WSGI HTTP Server for production)
 * django-cors-headers (for Cross-Origin Resource Sharing)
+* Rate Limiting (via DRF's built-in throttling)
 * AWS (for deployment - details coming soon)
 
 ## Getting Started
@@ -34,7 +35,7 @@ The recommended way to get this project running locally is using Docker Compose.
 3.  **Configure Environment Variables:**
     * Create a `.env` file in the project root directory (same level as `docker-compose.yml` and `manage.py`).
     * Define the database credentials and Django settings that Docker Compose and your Django application will use.
-    * **Important:** For production, ensure `DEBUG=0` and `SECRET_KEY` is a strong, randomly generated string. `ALLOWED_HOSTS` should list your production domain(s) when `DEBUG=0`.
+    * **Important:** For production, ensure `DEBUG=0` and `SECRET_KEY` is a strong, randomly generated string. `ALLOWED_HOSTS` should list your production domain(s) when `DEBUG=0`. For CORS, `CORS_ALLOW_ALL_ORIGINS` should be `False` and `CORS_ALLOWED_ORIGINS` should list your frontend domains.
     * Example `.env` file (replace `your_django_secret_key_here` with a strong, random key):
         ```dotenv
         # .env
@@ -157,9 +158,9 @@ If you prefer to run the project directly using a local Python environment and a
 
 The API provides the following main endpoints, accessible at the root of the API (e.g., `http://localhost:8000/api/` when running locally):
 
-* `GET /api/products/`: List all products. Supports pagination (`?page_size=`, `?page=`), filtering by category ID (`?category=`), search in title/description (`?search=`), and ordering by price/title (`?ordering=`, `?-ordering=`).
-* `GET /api/products/{id}/`: Retrieve details for a specific product by its ID.
-* `GET /api/categories/`: List all product categories.
+* `GET /api/products/`: List all products. Supports pagination (`?page_size=`, `?page=`), filtering by category ID (`?category=`), search in title/description (`?search=`), and ordering by price/title (`?ordering=`, `?-ordering=`). **Includes rate limiting for anonymous users.**
+* `GET /api/products/{id}/`: Retrieve details for a specific product by its ID. **Includes rate limiting for anonymous users.**
+* `GET /api/categories/`: List all product categories. **Includes rate limiting for anonymous users.**
 
 **(Note: Detailed API documentation (Swagger/OpenAPI) link will be provided here once deployed.)**
 
