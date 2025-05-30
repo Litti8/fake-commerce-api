@@ -17,6 +17,7 @@ Feel free to use this API in your frontend projects to display product lists, de
 * Gunicorn (WSGI HTTP Server for production)
 * django-cors-headers (for Cross-Origin Resource Sharing)
 * Rate Limiting (via DRF's built-in throttling)
+* **Cloudinary (for product image hosting)**
 
 ## Getting Started
 
@@ -66,7 +67,7 @@ The recommended way to get this project running locally is using Docker Compose.
         ```
 
 6.  **Populate Database (Optional, inside Docker):**
-    * Populate the database with fake product data. **Images for products are generated using placeholder URLs for local development.**
+    * Populate the database with fake product data. **Images for products are fetched from Cloudinary.**
         ```bash
         docker-compose exec web python manage.py populate_products --num_products 200 # Adjust number as needed
         ```
@@ -139,7 +140,7 @@ If you prefer to run the project directly using a local Python environment and a
         ```
 
 6.  **Populate Database (Optional, local venv):**
-    * Populate the database with fake product data. **Images for products are generated using placeholder URLs for local development.**
+    * Populate the database with fake product data. **Images for products are fetched from Cloudinary.**
         ```bash
         python manage.py populate_products --num_products 200 # Adjust number as needed
         ```

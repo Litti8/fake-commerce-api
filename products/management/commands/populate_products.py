@@ -45,20 +45,53 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.MIGRATE_HEADING(f'Creating {num_products} fake products...'))
 
-        # List of placeholder image URLs for variety
-        # You can add more URLs here or change them
-        PLACEHOLDER_IMAGE_URLS = [
-            "https://placehold.co/400x300/E0F2F7/2C3E50?text=Product+1",
-            "https://placehold.co/400x300/D1E8E4/2C3E50?text=Product+2",
-            "https://placehold.co/400x300/C2DEDC/2C3E50?text=Product+3",
-            "https://placehold.co/400x300/B3D4D4/2C3E50?text=Product+4",
-            "https://placehold.co/400x300/A4CACB/2C3E50?text=Product+5",
-            "https://placehold.co/400x300/95C0C2/2C3E50?text=Product+6",
-            "https://placehold.co/400x300/86B6B9/2C3E50?text=Product+7",
-            "https://placehold.co/400x300/77ACAF/2C3E50?text=Product+8",
-            "https://placehold.co/400x300/68A2A6/2C3E50?text=Product+9",
-            "https://placehold.co/400x300/59989D/2C3E50?text=Product+10",
-        ]
+        # URLs de imágenes de Cloudinary organizadas por categoría
+        CLOUDINARY_IMAGE_URLS = {
+            "Clothing": [
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619439/unnamed_lbl57e.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619439/shirt-1_k4855p.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619439/jean-1_hba77o.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619438/hoodie_gltmbq.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619438/black-dress_c2g1jw.jpg"
+            ],
+            "Footwear": [
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619555/tennis_uf8cmj.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619555/tennis-2_teacej.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619554/flat-shoes_qero8w.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619554/descarga_xvrgex.jpg", # Nota: "descarga" puede no ser un nombre muy descriptivo
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619554/boots_liffs7.jpg"
+            ],
+            "Accessories": [
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619568/wallet_dqjn2q.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619568/watch_xfj7qi.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619567/sunglasses_ja3qcb.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619566/earrings-pendant-necklace_ltuhea.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619565/backpack_jbukyz.jpg"
+            ],
+            "Electronics": [
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619582/smartphone_t6mi1z.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619581/mouse_azndux.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619580/laptop_xkj5dd.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619580/headphones_xykmvh.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619579/camera_cgqr7q.jpg"
+            ],
+            "Books": [
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619593/minimalist-novel_rneiny.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619592/fantasy-novel_ghltxn.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619592/cookbook_lyswwx.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619591/books_g8sro6.jpg"
+            ],
+            "Home & Kitchen": [
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619603/plant_g1aigl.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619602/pillow_wgkdpi.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619601/lamp_gj1lwa.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619600/kitchen_gvzjs4.jpg",
+                "https://res.cloudinary.com/duopj8det/image/upload/v1748619600/coffee-mug_li68kx.jpg"
+            ]
+        }
+        # URL de placeholder por si alguna categoría no tiene imágenes definidas
+        DEFAULT_PLACEHOLDER = "https://placehold.co/400x300/E0F2F7/2C3E50?text=Product+Image"
+
 
         for i in range(num_products):
             category = random.choice(categories)
@@ -67,8 +100,8 @@ class Command(BaseCommand):
             price = Decimal(random.uniform(5.00, 500.00)).quantize(Decimal('0.01'))
             sizes = ','.join(random.sample(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'One Size', '36', '38', '40', '42', '43', '44'], k=random.randint(1, 4)))
             
-            # Select a random image URL from our list
-            image_url = random.choice(PLACEHOLDER_IMAGE_URLS)
+            # Selecciona una URL de imagen de Cloudinary de la categoría correspondiente
+            image_url = random.choice(CLOUDINARY_IMAGE_URLS.get(category.name, [DEFAULT_PLACEHOLDER]))
 
             Product.objects.create(
                 category=category,
