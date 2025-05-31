@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'products',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -154,19 +155,46 @@ CORS_ALLOWED_ORIGINS = [
 # Django REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10, # Default page size if not specified in viewset
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_AUTHENTICATION_CLASSES': [], # No authentication for public API
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', # Allow anyone to access
-    ],
-    # --- Rate Limiting Configuration ---
+    'PAGE_SIZE': 10, 
     'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle', # Throttle for unauthenticated users
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/minute', # 100 requests per minute for anonymous users
-        # You can define other throttle rates, e.g., 'user': '1000/day' for authenticated users
+        'anon': '100/minute',
+        'user': '1000/minute'
     },
-    # --- End Rate Limiting Configuration ---
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# DRF Spectacular settings for OpenAPI schema generation
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Fake Commerce API',
+    'DESCRIPTION': 'Documentación de la API de Fake Commerce para desarrolladores frontend.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False, 
+    
+    
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'displayRequestDuration': True,
+        'filter': True,
+        'showExtensions': True,
+        'showCommonExtensions': True,
+    },
+    
+    
+    'REDOC_UI_SETTINGS': {
+        'hideLoading': True,
+        'nativeScrollbars': True,
+        'sortPropsAlphabetically': True,
+    },
+    
 }

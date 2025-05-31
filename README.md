@@ -17,7 +17,8 @@ Feel free to use this API in your frontend projects to display product lists, de
 * Gunicorn (WSGI HTTP Server for production)
 * django-cors-headers (for Cross-Origin Resource Sharing)
 * Rate Limiting (via DRF's built-in throttling)
-* **Cloudinary (for product image hosting)**
+* Cloudinary (for product image hosting)
+* **drf-spectacular (for OpenAPI/Swagger documentation)**
 
 ## Getting Started
 
@@ -67,14 +68,13 @@ The recommended way to get this project running locally is using Docker Compose.
         ```
 
 6.  **Populate Database (Optional, inside Docker):**
-    * Populate the database with fake product data. **Images for products are fetched from Cloudinary.**
+    * Populate the database with fake product data. Images for products are fetched from Cloudinary.
         ```bash
         docker-compose exec web python manage.py populate_products --num_products 200 # Adjust number as needed
         ```
 
 7.  **Access the API:**
     * The Django application is served by **Gunicorn** inside the `web` container, and its static files are served by Django's development server (when `DEBUG=1`). It is accessible via `http://localhost:8000/` on your host machine (due to port mapping in `docker-compose.yml`).
-    * You can now access the API endpoints using your web browser (which will show the browsable API) or an API client like Postman:
 
 ---
 
@@ -140,7 +140,7 @@ If you prefer to run the project directly using a local Python environment and a
         ```
 
 6.  **Populate Database (Optional, local venv):**
-    * Populate the database with fake product data. **Images for products are fetched from Cloudinary.**
+    * Populate the database with fake product data. Images for products are fetched from Cloudinary.
         ```bash
         python manage.py populate_products --num_products 200 # Adjust number as needed
         ```
@@ -162,8 +162,16 @@ The API provides the following main endpoints, accessible at the root of the API
 * `GET /api/products/{id}/`: Retrieve details for a specific product by its ID. **Includes rate limiting for anonymous users.**
 * `GET /api/categories/`: List all product categories. **Includes rate limiting for anonymous users.**
 
-**(Note: Detailed API documentation (Swagger/OpenAPI) link will be provided here once deployed.)**
+### API Documentation
+
+The API documentation is available in OpenAPI 3.0 format and can be viewed using interactive interfaces:
+
+* **OpenAPI Schema (JSON/YAML):** `http://localhost:8000/api/schema/`
+* **Swagger UI (Interactive Docs):** `http://localhost:8000/api/schema/swagger-ui/`
+* **ReDoc (Read-only Docs):** `http://localhost:8000/api/schema/redoc/`
 
 ## Contributing
 
 This project is primarily for educational use. Contributions are not expected, but if you find issues or have suggestions, please open an issue on GitHub.
+
+
